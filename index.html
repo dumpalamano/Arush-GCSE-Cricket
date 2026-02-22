@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surrey U16 | Cricket & GCSE Routine</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1f3a;
+    --gold: #c8a84b;
+    --gold-light: #e8c96a;
+    --cream: #f5f0e8;
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --red: #c1121f;
+    --slate: #2a3f5f;
+    --mid: #6b7a99;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--navy); color: var(--cream); font-family: 'Source Serif 4', serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(135deg, #0b1f3a 0%, #162d4f 60%, #1a3a28 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 28px 32px 20px;
+    display: flex; align-items: flex-end; gap: 20px;
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,168,75,0.12) 0%, transparent 70%);
+  }
+  .badge { background: var(--gold); color: var(--navy); font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; text-transform: uppercase; margin-bottom: 4px; display: inline-block; }
+  .header h1 { font-family: 'Oswald', sans-serif; font-size: clamp(22px,4vw,36px); font-weight: 700; letter-spacing: 1px; line-height: 1.1; }
+  .header h1 span { color: var(--gold); }
+  .header-sub { font-size: 13px; color: var(--mid); margin-top: 4px; font-style: italic; }
+  .cricket-icon { font-size: 52px; line-height: 1; opacity: 0.9; }
+
+  .phase-nav { display: flex; background: #07152a; border-bottom: 2px solid var(--slate); overflow-x: auto; scrollbar-width: none; }
+  .phase-nav::-webkit-scrollbar { display: none; }
+  .phase-btn { flex: 1; min-width: 100px; padding: 12px 8px; font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--mid); background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; white-space: nowrap; text-align: center; }
+  .phase-btn:hover { color: var(--cream); background: rgba(255,255,255,0.04); }
+  .phase-btn.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(200,168,75,0.07); }
+  .phase-btn small { display: block; font-size: 9px; color: inherit; opacity: 0.7; margin-top: 2px; letter-spacing: 0.5px; }
+
+  .main { padding: 24px 20px; max-width: 960px; margin: 0 auto; }
+  .phase-panel { display: none; animation: fadeUp 0.3s ease; }
+  .phase-panel.active { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .phase-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .phase-title { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; }
+  .phase-dates { font-size: 12px; color: var(--gold); font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+  .phase-desc { font-size: 14px; color: var(--mid); font-style: italic; margin-top: 2px; }
+  .phase-tip { background: rgba(200,168,75,0.1); border-left: 3px solid var(--gold); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; color: var(--cream); margin-bottom: 20px; }
+
+  .week-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin-bottom: 28px; }
+  @media (max-width: 640px) { .week-grid { grid-template-columns: repeat(4,1fr); } }
+  .day-card { background: #0f2540; border: 1px solid var(--slate); border-radius: 8px; overflow: hidden; transition: transform 0.15s, border-color 0.15s; }
+  .day-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+  .day-card.selected { border-color: var(--green-light); background: #0f2f1e; }
+  .day-name { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-align: center; padding: 7px 4px 5px; background: var(--slate); text-transform: uppercase; }
+  .day-card.selected .day-name { background: var(--green); }
+  .day-pills { padding: 6px 5px; display: flex; flex-direction: column; gap: 3px; min-height: 60px; }
+  .pill { border-radius: 3px; font-size: 9px; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; text-align: center; padding: 2px 4px; text-transform: uppercase; font-weight: 500; }
+  .pill.study { background: rgba(193,18,31,0.25); color: #e87c82; border: 1px solid rgba(193,18,31,0.4); }
+  .pill.cricket { background: rgba(82,183,136,0.2); color: var(--green-light); border: 1px solid rgba(82,183,136,0.3); }
+  .pill.rest { background: rgba(107,122,153,0.2); color: var(--mid); border: 1px solid rgba(107,122,153,0.3); }
+  .pill.fitness { background: rgba(200,168,75,0.2); color: var(--gold-light); border: 1px solid rgba(200,168,75,0.3); }
+
+  .sessions-title { font-family: 'Oswald', sans-serif; font-size: 16px; letter-spacing: 1px; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--slate); }
+  .sessions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  @media (max-width: 540px) { .sessions-grid { grid-template-columns: 1fr; } }
+
+  .session-card { background: #0f2540; border: 1px solid var(--slate); border-radius: 10px; padding: 16px; transition: border-color 0.2s; }
+  .session-card:hover { border-color: var(--gold); }
+  .session-card.cricket-card { border-left: 3px solid var(--green-light); }
+  .session-card.study-card { border-left: 3px solid #e87c82; }
+  .session-card.mental-card { border-left: 3px solid var(--gold); }
+  .session-card.fitness-card { border-left: 3px solid var(--gold-light); }
+  .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .session-name { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
+  .session-time { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--mid); background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 10px; }
+  .session-items { list-style: none; }
+  .session-items li { font-size: 12.5px; color: #c8d0de; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: flex-start; gap: 6px; }
+  .session-items li:last-child { border-bottom: none; }
+  .session-items li::before { content: '›'; color: var(--gold); flex-shrink: 0; }
+
+  .countdown-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .countdown-card { background: #0f2540; border: 1px solid var(--slate); border-radius: 10px; padding: 16px; text-align: center; }
+  .countdown-card.exam { border-top: 3px solid #e87c82; }
+  .countdown-card.season { border-top: 3px solid var(--green-light); }
+  .countdown-num { font-family: 'Oswald', sans-serif; font-size: 42px; font-weight: 700; line-height: 1; }
+  .countdown-card.exam .countdown-num { color: #e87c82; }
+  .countdown-card.season .countdown-num { color: var(--green-light); }
+  .countdown-label { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); margin-top: 4px; }
+  .countdown-sub { font-size: 11px; color: var(--mid); font-style: italic; margin-top: 4px; }
+
+  .principles { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 8px; }
+  @media (max-width: 540px) { .principles { grid-template-columns: 1fr; } }
+  .principle-card { background: #0f2540; border: 1px solid var(--slate); border-radius: 10px; padding: 14px; text-align: center; }
+  .principle-icon { font-size: 26px; margin-bottom: 6px; }
+  .principle-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.5px; margin-bottom: 5px; }
+  .principle-text { font-size: 11.5px; color: var(--mid); line-height: 1.5; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; background: #0a1b30; border: 1px solid var(--slate); border-radius: 10px; padding: 14px 16px; }
+  .checklist-toolbar-left { flex: 1; }
+  .week-label { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--cream); }
+  .week-sub { font-size: 11px; color: var(--mid); margin-top: 2px; }
+  .toolbar-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-sm { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn-reset { background: var(--slate); color: var(--cream); }
+  .btn-reset:hover { background: #3a5070; }
+  .btn-gold { background: rgba(200,168,75,0.2); color: var(--gold); border: 1px solid rgba(200,168,75,0.4) !important; }
+  .btn-gold:hover { background: rgba(200,168,75,0.3); }
+
+  .progress-bar-wrap { margin-bottom: 20px; }
+  .progress-label { display: flex; justify-content: space-between; font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--mid); margin-bottom: 6px; }
+  .progress-bar { height: 8px; background: var(--slate); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); border-radius: 4px; transition: width 0.4s ease; }
+
+  .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 600px) { .checklist-grid { grid-template-columns: 1fr; } }
+
+  .checklist-group { background: #0f2540; border: 1px solid var(--slate); border-radius: 10px; padding: 14px; }
+  .checklist-group-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--slate); }
+  .checklist-group-title { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .checklist-group-title.ct { color: var(--green-light); }
+  .checklist-group-title.st { color: #e87c82; }
+  .group-count { font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--mid); }
+
+  .check-item { display: flex; align-items: flex-start; gap: 8px; padding: 5px 4px; cursor: pointer; user-select: none; border-radius: 4px; transition: background 0.1s; }
+  .check-item:hover { background: rgba(255,255,255,0.03); }
+  .check-box { width: 16px; height: 16px; min-width: 16px; border: 2px solid var(--slate); border-radius: 3px; margin-top: 2px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; }
+  .check-item.done .check-box { background: var(--green); border-color: var(--green-light); color: white; }
+  .check-item.done .check-label { text-decoration: line-through; color: var(--mid); }
+  .check-label { font-size: 12.5px; color: #c8d0de; line-height: 1.4; flex: 1; }
+  .check-delete { background: none; border: none; color: #3a4f6b; cursor: pointer; font-size: 15px; padding: 0 2px; transition: color 0.15s; flex-shrink: 0; line-height: 1; }
+  .check-delete:hover { color: #e87c82; }
+
+  .add-task-row { display: flex; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--slate); }
+  .add-task-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--slate); color: var(--cream); border-radius: 6px; padding: 6px 10px; font-family: 'Source Serif 4', serif; font-size: 12px; outline: none; transition: border-color 0.2s; }
+  .add-task-input:focus { border-color: var(--gold); }
+  .add-task-input::placeholder { color: var(--mid); }
+  .add-task-btn { background: var(--slate); border: none; color: var(--gold); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 16px; transition: background 0.15s; }
+  .add-task-btn:hover { background: #3a5070; }
+
+  /* ===== SUBJECTS ===== */
+  .subjects-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; background: #0a1b30; border: 1px solid var(--slate); border-radius: 10px; padding: 14px 16px; }
+  .subject-input-wrap { display: flex; gap: 8px; flex: 1; min-width: 200px; }
+  .subject-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--slate); color: var(--cream); border-radius: 6px; padding: 9px 12px; font-family: 'Source Serif 4', serif; font-size: 13px; outline: none; transition: border-color 0.2s; }
+  .subject-input:focus { border-color: var(--gold); }
+  .subject-input::placeholder { color: var(--mid); }
+  .btn-add-subject { background: var(--gold); color: var(--navy); border: none; border-radius: 6px; padding: 9px 18px; font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+  .btn-add-subject:hover { background: var(--gold-light); }
+
+  .subject-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; min-height: 10px; }
+  .subject-chip { display: flex; align-items: center; gap: 6px; background: #0f2540; border: 1px solid var(--slate); border-radius: 20px; padding: 6px 14px; font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 0.5px; cursor: pointer; transition: all 0.15s; color: var(--mid); }
+  .subject-chip:hover { border-color: var(--gold); color: var(--cream); }
+  .subject-chip.active { background: rgba(200,168,75,0.12); border-color: var(--gold); color: var(--gold); }
+  .chip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .chip-remove { background: none; border: none; color: inherit; cursor: pointer; font-size: 14px; padding: 0; opacity: 0.6; line-height: 1; }
+  .chip-remove:hover { opacity: 1; color: #e87c82; }
+
+  .subject-plan-container { display: none; animation: fadeUp 0.3s ease; }
+  .subject-plan-container.active { display: block; }
+  .subject-plan-header { background: linear-gradient(135deg, #0f2540, #0f2530); border: 1px solid var(--slate); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+  .subject-plan-name { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; }
+  .subject-plan-meta { font-size: 13px; color: var(--mid); font-style: italic; margin-top: 6px; line-height: 1.5; }
+  .subject-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .subject-tag { background: rgba(200,168,75,0.15); color: var(--gold); border: 1px solid rgba(200,168,75,0.3); border-radius: 4px; padding: 2px 8px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .plan-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  @media (max-width: 540px) { .plan-sections { grid-template-columns: 1fr; } }
+  .plan-section { background: #0f2540; border: 1px solid var(--slate); border-radius: 10px; padding: 16px; }
+  .plan-section-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.5px; margin-bottom: 10px; text-transform: uppercase; }
+  .plan-list { list-style: none; }
+  .plan-list li { font-size: 12.5px; color: #c8d0de; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; gap: 6px; align-items: flex-start; }
+  .plan-list li:last-child { border-bottom: none; }
+  .plan-list li::before { content: '›'; color: var(--gold); flex-shrink: 0; }
+
+  .subject-week-mini { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; }
+  @media (max-width: 600px) { .subject-week-mini { grid-template-columns: repeat(4,1fr); } }
+  .mini-day { background: #0f2540; border: 1px solid var(--slate); border-radius: 6px; overflow: hidden; }
+  .mini-day-name { font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700; text-align: center; padding: 5px 2px; background: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; }
+  .mini-day-content { padding: 5px 4px; min-height: 48px; display: flex; flex-direction: column; gap: 2px; }
+  .mini-pill { font-family: 'Oswald', sans-serif; font-size: 8px; letter-spacing: 0.3px; text-align: center; padding: 2px 3px; border-radius: 2px; text-transform: uppercase; word-break: break-word; line-height: 1.3; }
+
+  .no-subject-state { text-align: center; padding: 48px 20px; color: var(--mid); }
+  .no-subject-state .big { font-size: 48px; margin-bottom: 12px; }
+  .no-subject-state p { font-size: 14px; font-style: italic; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #0f2540; border: 1px solid var(--slate); border-radius: 12px; padding: 24px; max-width: 420px; width: 90%; animation: fadeUp 0.2s ease; }
+  .modal-title { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--gold); margin-bottom: 16px; }
+  .modal-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--slate); color: var(--cream); border-radius: 6px; padding: 10px 12px; font-family: 'Source Serif 4', serif; font-size: 13px; outline: none; margin-bottom: 10px; }
+  .modal-input:focus { border-color: var(--gold); }
+  .modal-select { width: 100%; background: #0b1f3a; border: 1px solid var(--slate); color: var(--cream); border-radius: 6px; padding: 10px 12px; font-family: 'Source Serif 4', serif; font-size: 13px; outline: none; margin-bottom: 14px; cursor: pointer; }
+  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  .btn-cancel { background: var(--slate); color: var(--cream); border: none; border-radius: 6px; padding: 8px 16px; font-family: 'Oswald', sans-serif; font-size: 12px; cursor: pointer; letter-spacing: 1px; }
+  .btn-confirm { background: var(--gold); color: var(--navy); border: none; border-radius: 6px; padding: 8px 16px; font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 1px; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #3a4f6b; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge">Surrey U16 Academy</div>
+    <h1>Cricket &amp; GCSE<br><span>Peak Performance Plan</span></h1>
+    <div class="header-sub">Feb 2025 → June 2025 · 30–60 min daily blocks</div>
+  </div>
+  <div class="cricket-icon">🏏</div>
+</div>
+
+<nav class="phase-nav">
+  <button class="phase-btn active" onclick="showPhase('now',this)">Now → Apr<small>Foundation</small></button>
+  <button class="phase-btn" onclick="showPhase('apr',this)">Apr → May<small>Intensify</small></button>
+  <button class="phase-btn" onclick="showPhase('may',this)">May Exams<small>Exam Mode</small></button>
+  <button class="phase-btn" onclick="showPhase('jun',this)">Jun Season<small>Cricket First</small></button>
+  <button class="phase-btn" onclick="showPhase('daily',this)">Daily Sessions<small>Drill Down</small></button>
+  <button class="phase-btn" onclick="showPhase('subjects',this)">My Subjects<small>Study Plans</small></button>
+  <button class="phase-btn" onclick="showPhase('checklist',this)">Checklist<small>Track It</small></button>
+</nav>
+
+<div class="main">
+
+  <div class="countdown-row">
+    <div class="countdown-card exam">
+      <div class="countdown-num" id="exam-days">—</div>
+      <div class="countdown-label">Days to GCSEs</div>
+      <div class="countdown-sub">First paper ~12 May 2025</div>
+    </div>
+    <div class="countdown-card season">
+      <div class="countdown-num" id="season-days">—</div>
+      <div class="countdown-label">Days to Season</div>
+      <div class="countdown-sub">Surrey U16 season opens June</div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-panel active" id="phase-now">
+    <div class="phase-header"><div>
+      <div class="phase-title">Phase 1 — Foundation</div>
+      <div class="phase-dates">NOW → END OF APRIL</div>
+      <div class="phase-desc">Build the habits. Lock in the systems. Equal split between cricket and English.</div>
+    </div></div>
+    <div class="phase-tip">🎯 <strong>Focus:</strong> Consistency over intensity. 45 mins every day beats 3 hours once a week.</div>
+    <div class="sessions-title">Weekly Structure</div>
+    <div class="week-grid">
+      <div class="day-card"><div class="day-name">Mon</div><div class="day-pills"><span class="pill study">English 30m</span><span class="pill fitness">Fitness 20m</span></div></div>
+      <div class="day-card"><div class="day-name">Tue</div><div class="day-pills"><span class="pill cricket">Batting drills</span><span class="pill study">Reading 15m</span></div></div>
+      <div class="day-card"><div class="day-name">Wed</div><div class="day-pills"><span class="pill study">English 30m</span><span class="pill cricket">Mental game</span></div></div>
+      <div class="day-card"><div class="day-name">Thu</div><div class="day-pills"><span class="pill cricket">Academy</span><span class="pill study">Vocab 15m</span></div></div>
+      <div class="day-card"><div class="day-name">Fri</div><div class="day-pills"><span class="pill study">English 30m</span><span class="pill fitness">Agility 20m</span></div></div>
+      <div class="day-card"><div class="day-name">Sat</div><div class="day-pills"><span class="pill cricket">Long session</span><span class="pill fitness">Fielding</span></div></div>
+      <div class="day-card"><div class="day-name">Sun</div><div class="day-pills"><span class="pill rest">Active rest</span><span class="pill study">Light read</span></div></div>
+    </div>
+    <div class="sessions-title">Focus Areas</div>
+    <div class="sessions-grid">
+      <div class="session-card study-card">
+        <div class="session-header"><div class="session-name">📚 English GCSE</div><div class="session-time">30 min/day</div></div>
+        <ul class="session-items">
+          <li>Read 20 mins daily — novels, news, anything</li>
+          <li>Learn 5 new vocabulary words each week</li>
+          <li>Practice one PEEL paragraph per session</li>
+          <li>Read 1 past paper question per week, note structure</li>
+          <li>Build a quote bank from your set texts now</li>
+        </ul>
+      </div>
+      <div class="session-card cricket-card">
+        <div class="session-header"><div class="session-name">🏏 Batting Technique</div><div class="session-time">3x/week</div></div>
+        <ul class="session-items">
+          <li>Shadow batting — 100 perfect drives in front of mirror</li>
+          <li>Throwdowns or ball machine work at Academy</li>
+          <li>Record yourself from side-on once a week</li>
+          <li>One technical focus per 2-week block</li>
+          <li>Play with soft hands — drills at half-pace first</li>
+        </ul>
+      </div>
+      <div class="session-card fitness-card">
+        <div class="session-header"><div class="session-name">⚡ Fielding & Fitness</div><div class="session-time">3x/week · 20 min</div></div>
+        <ul class="session-items">
+          <li>Cone agility: T-drill, 5-10-5, shuttle runs</li>
+          <li>Ground fielding: 50 pick-up and throw reps</li>
+          <li>Speed work: 20m sprint x 8 with full rest</li>
+          <li>Catching: 10 mins high catches / slip cradle</li>
+          <li>Core stability: plank series, lateral lunges</li>
+        </ul>
+      </div>
+      <div class="session-card mental-card">
+        <div class="session-header"><div class="session-name">🧠 Mental Game</div><div class="session-time">10 min/day</div></div>
+        <ul class="session-items">
+          <li>Pre-session routine: same warm-up every time</li>
+          <li>Journaling: 3 lines on what you did well today</li>
+          <li>Visualise your best innings 5 mins before sleep</li>
+          <li>Box breathing: 4-4-4-4 before any pressure drill</li>
+          <li>Watch one T20 innings analytically per week</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sessions-title">Key Principles</div>
+    <div class="principles">
+      <div class="principle-card"><div class="principle-icon">⏰</div><div class="principle-title">Time-block It</div><div class="principle-text">Same time every day. Treat it like academy training — non-negotiable.</div></div>
+      <div class="principle-card"><div class="principle-icon">📓</div><div class="principle-title">Cricket Journal</div><div class="principle-text">One notebook for cricket and study insights. Builds the mental habit loop.</div></div>
+      <div class="principle-card"><div class="principle-icon">🎯</div><div class="principle-title">One Focus Each</div><div class="principle-text">One English skill + one cricket skill per week. Don't try to fix everything.</div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-panel" id="phase-apr">
+    <div class="phase-header"><div>
+      <div class="phase-title">Phase 2 — Intensify</div>
+      <div class="phase-dates">APRIL → EARLY MAY</div>
+      <div class="phase-desc">Shift to 60/40 study. Cricket becomes sharper and more targeted.</div>
+    </div></div>
+    <div class="phase-tip">🎯 English revision ramps up. Every cricket rep has a purpose — quality over quantity.</div>
+    <div class="sessions-title">Weekly Structure</div>
+    <div class="week-grid">
+      <div class="day-card"><div class="day-name">Mon</div><div class="day-pills"><span class="pill study">English 45m</span><span class="pill fitness">Agility 15m</span></div></div>
+      <div class="day-card"><div class="day-name">Tue</div><div class="day-pills"><span class="pill study">Past paper</span><span class="pill cricket">Batting 20m</span></div></div>
+      <div class="day-card"><div class="day-name">Wed</div><div class="day-pills"><span class="pill study">English 45m</span><span class="pill cricket">Mental game</span></div></div>
+      <div class="day-card"><div class="day-name">Thu</div><div class="day-pills"><span class="pill cricket">Academy</span><span class="pill study">Review notes</span></div></div>
+      <div class="day-card"><div class="day-name">Fri</div><div class="day-pills"><span class="pill study">Mock exam Q</span><span class="pill fitness">Sprint work</span></div></div>
+      <div class="day-card"><div class="day-name">Sat</div><div class="day-pills"><span class="pill cricket">Practice game</span><span class="pill study">Light review</span></div></div>
+      <div class="day-card"><div class="day-name">Sun</div><div class="day-pills"><span class="pill rest">Rest / reset</span><span class="pill study">Read 20m</span></div></div>
+    </div>
+    <div class="sessions-grid">
+      <div class="session-card study-card">
+        <div class="session-header"><div class="session-name">📚 Exam Technique</div><div class="session-time">45 min/day</div></div>
+        <ul class="session-items">
+          <li>1 timed question under exam conditions per week</li>
+          <li>Study mark schemes — understand what examiners reward</li>
+          <li>Language analysis: AQA-style paper 1 Q4 & Q5</li>
+          <li>Practise openings that hook within 2 sentences</li>
+          <li>Get a teacher/parent to mark one response per week</li>
+        </ul>
+      </div>
+      <div class="session-card cricket-card">
+        <div class="session-header"><div class="session-name">🏏 Match Prep</div><div class="session-time">Focused 30m</div></div>
+        <ul class="session-items">
+          <li>Scenario batting: 5th over, 2 down, pace attack</li>
+          <li>Rehearse specific shots for early season</li>
+          <li>Review footage from Phase 1 — spot improvements</li>
+          <li>Work with coach on pre-season goals</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-panel" id="phase-may">
+    <div class="phase-header"><div>
+      <div class="phase-title">Phase 3 — Exam Mode</div>
+      <div class="phase-dates">MAY (EXAM WEEKS)</div>
+      <div class="phase-desc">Study is primary. Cricket is your mental release and stress management tool.</div>
+    </div></div>
+    <div class="phase-tip">🎯 Athletes who keep moving perform better cognitively. 30 mins cricket = sharper brain for revision. Don't stop — adjust.</div>
+    <div class="sessions-title">Exam Week Structure</div>
+    <div class="week-grid">
+      <div class="day-card selected"><div class="day-name">Exam day</div><div class="day-pills"><span class="pill study">Light review</span><span class="pill rest">Rest well</span></div></div>
+      <div class="day-card"><div class="day-name">Non-exam</div><div class="day-pills"><span class="pill study">Study 50m</span><span class="pill cricket">Bat 20m</span></div></div>
+      <div class="day-card"><div class="day-name">Sat</div><div class="day-pills"><span class="pill cricket">Academy</span><span class="pill rest">Recharge</span></div></div>
+      <div class="day-card"><div class="day-name">Sun</div><div class="day-pills"><span class="pill rest">Full rest</span><span class="pill study">Light re-read</span></div></div>
+    </div>
+    <div class="sessions-grid">
+      <div class="session-card study-card">
+        <div class="session-header"><div class="session-name">📚 Exam Day Rules</div><div class="session-time">Priority</div></div>
+        <ul class="session-items">
+          <li>Night before: light review only — no new content</li>
+          <li>Morning of exam: quick mind-map of key quotes</li>
+          <li>After exam: don't dissect it — move forward</li>
+          <li>Use your cricket focus routine as your calm-down</li>
+          <li>Sleep 8+ hours — it's part of exam prep</li>
+        </ul>
+      </div>
+      <div class="session-card mental-card">
+        <div class="session-header"><div class="session-name">🧠 Athlete's Mindset</div><div class="session-time">Daily</div></div>
+        <ul class="session-items">
+          <li>Treat each exam like an innings: prepare, execute, move on</li>
+          <li>Box breathing before you open the paper</li>
+          <li>Physical movement every day — even a 20 min walk</li>
+          <li>Your cricket mental toughness is your exam superpower</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-panel" id="phase-jun">
+    <div class="phase-header"><div>
+      <div class="phase-title">Phase 4 — Cricket Season</div>
+      <div class="phase-dates">JUNE ONWARDS</div>
+      <div class="phase-desc">Exams done. Cricket is the priority. You've earned this.</div>
+    </div></div>
+    <div class="phase-tip">🏆 Trust your preparation. Play with confidence. Stay process-focused in every match.</div>
+    <div class="sessions-title">Season Week Structure</div>
+    <div class="week-grid">
+      <div class="day-card"><div class="day-name">Mon</div><div class="day-pills"><span class="pill cricket">Skill work</span><span class="pill rest">Recovery</span></div></div>
+      <div class="day-card"><div class="day-name">Tue</div><div class="day-pills"><span class="pill cricket">Academy</span><span class="pill fitness">Gym 20m</span></div></div>
+      <div class="day-card"><div class="day-name">Wed</div><div class="day-pills"><span class="pill fitness">Fitness</span><span class="pill cricket">Video review</span></div></div>
+      <div class="day-card"><div class="day-name">Thu</div><div class="day-pills"><span class="pill cricket">Match prep</span><span class="pill rest">Rest well</span></div></div>
+      <div class="day-card"><div class="day-name">Fri</div><div class="day-pills"><span class="pill rest">Light active</span><span class="pill cricket">Visualise</span></div></div>
+      <div class="day-card"><div class="day-name">Sat</div><div class="day-pills"><span class="pill cricket">🏆 Match day</span></div></div>
+      <div class="day-card"><div class="day-name">Sun</div><div class="day-pills"><span class="pill rest">Recovery</span><span class="pill cricket">Review</span></div></div>
+    </div>
+    <div class="sessions-grid">
+      <div class="session-card cricket-card">
+        <div class="session-header"><div class="session-name">🏏 Match Performance</div><div class="session-time">Game focus</div></div>
+        <ul class="session-items">
+          <li>Pre-match routine: consistent, short, calming</li>
+          <li>Between-ball reset: mark crease, breathe, next ball</li>
+          <li>Post-innings: 3 done well, 1 to work on</li>
+          <li>Communicate with coaches on development goals</li>
+        </ul>
+      </div>
+      <div class="session-card fitness-card">
+        <div class="session-header"><div class="session-name">⚡ In-Season Fitness</div><div class="session-time">Maintain</div></div>
+        <ul class="session-items">
+          <li>Speed work 2x per week — don't let it drop</li>
+          <li>Fielding drills: 15 mins before each session</li>
+          <li>Cold shower after hard training days</li>
+          <li>Carbs the night before matches, protein after</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY SESSIONS -->
+  <div class="phase-panel" id="phase-daily">
+    <div class="phase-header"><div>
+      <div class="phase-title">Daily Session Templates</div>
+      <div class="phase-dates">YOUR 30–60 MINUTE BLOCKS</div>
+      <div class="phase-desc">Exact formats for each session type.</div>
+    </div></div>
+    <div class="sessions-title">Study Sessions</div>
+    <div class="sessions-grid">
+      <div class="session-card study-card">
+        <div class="session-header"><div class="session-name">📖 Reading & Analysis</div><div class="session-time">30 min</div></div>
+        <ul class="session-items">
+          <li>0–5 min: Review yesterday's notes</li>
+          <li>5–20 min: Read set text / unseen passage actively</li>
+          <li>20–28 min: Write one PEEL paragraph</li>
+          <li>28–30 min: 3 key words/techniques to remember</li>
+        </ul>
+      </div>
+      <div class="session-card study-card">
+        <div class="session-header"><div class="session-name">✍️ Exam Practice</div><div class="session-time">45 min</div></div>
+        <ul class="session-items">
+          <li>0–5 min: Read question, plan in bullet points</li>
+          <li>5–35 min: Write response under timed conditions</li>
+          <li>35–43 min: Mark using mark scheme</li>
+          <li>43–45 min: One improvement for next time</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sessions-title">Cricket Sessions</div>
+    <div class="sessions-grid">
+      <div class="session-card cricket-card">
+        <div class="session-header"><div class="session-name">🏏 Home Batting Drill</div><div class="session-time">30 min</div></div>
+        <ul class="session-items">
+          <li>0–5 min: Dynamic warm-up + shadow batting</li>
+          <li>5–15 min: 100 shadow drives/cuts in mirror</li>
+          <li>15–25 min: Throwdowns or wall-ball reaction</li>
+          <li>25–30 min: 50 reps of your technical focus shot</li>
+        </ul>
+      </div>
+      <div class="session-card fitness-card">
+        <div class="session-header"><div class="session-name">⚡ Fielding Fitness</div><div class="session-time">20 min</div></div>
+        <ul class="session-items">
+          <li>0–3 min: Dynamic stretch + skips</li>
+          <li>3–10 min: T-drill x 6 sets</li>
+          <li>10–16 min: Sprint 20m x 8 (full rest)</li>
+          <li>16–20 min: Pop-up catches x 20 + low catches x 20</li>
+        </ul>
+      </div>
+      <div class="session-card mental-card">
+        <div class="session-header"><div class="session-name">🧠 Mental Performance</div><div class="session-time">10 min</div></div>
+        <ul class="session-items">
+          <li>2 min: Box breathing (4-4-4-4 x 3)</li>
+          <li>5 min: Visualise your best innings in detail</li>
+          <li>3 min: Journal — 3 things done well today</li>
+        </ul>
+      </div>
+      <div class="session-card fitness-card">
+        <div class="session-header"><div class="session-name">🌙 Evening Wind-Down</div><div class="session-time">10 min</div></div>
+        <ul class="session-items">
+          <li>Review tomorrow's schedule</li>
+          <li>Lay out kit / study materials tonight</li>
+          <li>No screens 30 mins before sleep</li>
+          <li>8–9 hours sleep — your #1 performance tool</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUBJECTS ===== -->
+  <div class="phase-panel" id="phase-subjects">
+    <div class="phase-header"><div>
+      <div class="phase-title">My GCSE Subjects</div>
+      <div class="phase-dates">PERSONALISED STUDY PLANS</div>
+      <div class="phase-desc">Add any subject to get a tailored revision plan. Checklist tasks are added automatically.</div>
+    </div></div>
+
+    <div class="subjects-toolbar">
+      <div class="subject-input-wrap">
+        <input class="subject-input" id="subject-input" placeholder="Type a subject e.g. Maths, Biology, History, French…" onkeydown="if(event.key==='Enter') addSubject()">
+        <button class="btn-add-subject" onclick="addSubject()">+ Add Subject</button>
+      </div>
+    </div>
+
+    <div class="subject-chips" id="subject-chips"></div>
+
+    <div id="subject-plans-area">
+      <div class="no-subject-state" id="no-subject-msg">
+        <div class="big">📚</div>
+        <p>Add your GCSE subjects above to get a personalised study plan and checklist tasks for each one.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHECKLIST ===== -->
+  <div class="phase-panel" id="phase-checklist">
+    <div class="phase-header"><div>
+      <div class="phase-title">Weekly Checklist</div>
+      <div class="phase-dates">TRACK YOUR WEEK</div>
+      <div class="phase-desc">Tick off as you go. Saved automatically. Add custom tasks to any group. Resets each week.</div>
+    </div></div>
+
+    <div class="checklist-toolbar">
+      <div class="checklist-toolbar-left">
+        <div class="week-label" id="week-label">Week of —</div>
+        <div class="week-sub" id="streak-label">Loading…</div>
+      </div>
+      <div class="toolbar-btns">
+        <button class="btn-sm btn-gold" onclick="openAddTaskModal()">+ Custom Task</button>
+        <button class="btn-sm btn-reset" onclick="confirmReset()">Reset Week</button>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>Weekly Progress</span><span id="progress-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="checklist-grid" id="checklist-grid"></div>
+  </div>
+
+</div>
+
+<footer>Surrey U16 Academy · Cricket & GCSE Performance Plan · Feb–June 2025</footer>
+
+<!-- Add Task Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">+ Add Custom Task</div>
+    <input class="modal-input" id="modal-task-text" placeholder="Task description…" onkeydown="if(event.key==='Enter') confirmAddTask()">
+    <select class="modal-select" id="modal-task-group">
+      <option value="cricket">🏏 Cricket</option>
+      <option value="english">📚 English GCSE</option>
+      <option value="mental">🧠 Mental & Wellbeing</option>
+      <option value="physical">⚡ Physical</option>
+    </select>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmAddTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== PHASE NAV =====
+function showPhase(id, btn) {
+  document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('phase-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ===== COUNTDOWN =====
+(function() {
+  const now = new Date();
+  document.getElementById('exam-days').textContent = Math.max(0, Math.ceil((new Date('2025-05-12') - now) / 86400000));
+  document.getElementById('season-days').textContent = Math.max(0, Math.ceil((new Date('2025-06-01') - now) / 86400000));
+})();
+
+// ===== STORAGE HELPERS =====
+const store = {
+  get: (k, def) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : def; } catch(e) { return def; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+};
+
+function getWeekKey() {
+  const d = new Date(), day = d.getDay();
+  const mon = new Date(d); mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+  return `wk_${mon.getFullYear()}_${mon.getMonth()}_${mon.getDate()}`;
+}
+
+// ===== SUBJECT DATABASE =====
+const SUBJECT_DB = {
+  maths: {
+    emoji:'🔢', color:'#7c9bde', tags:['Problem Solving','Calculator','Non-Calculator'],
+    overview:'Maths rewards practice over passive revision. Work through problems daily — not just reading notes.',
+    keyTechniques:['Past papers under timed conditions — 30 mark papers = 30 mins','Topic-by-topic targeting using mark schemes to find weak areas','Formula drill: know every formula by heart before the exam','Show all working — method marks are easy wins even if answer is wrong'],
+    weeklyPlan:['Mon: Algebra & equations (30 min)','Tue: Number & fractions practice','Wed: Geometry + trigonometry','Thu: Statistics & probability','Fri: Full past paper section timed','Sat: Review mistakes + redo wrong answers','Sun: Light formula review'],
+    examTips:['Circle every Q you\'re unsure about — come back later','If stuck: write what you know and attempt something','Draw diagrams for geometry — it forces clear thinking','Check units in every calculation'],
+    resources:['CGP Maths Revision Guide','Corbettmaths (free videos + worksheets)','MyMaths / Sparx Maths','AQA past papers at aqa.org.uk']
+  },
+  biology: {
+    emoji:'🧬', color:'#52b788', tags:['Memory Based','Diagrams','6-Markers'],
+    overview:'Biology is content-heavy — use active recall and spaced repetition, not re-reading.',
+    keyTechniques:['Flashcard everything: definitions, processes, key terms','Draw and label diagrams from memory (osmosis, cell division, etc.)','Use "explain how/why" sentence stems for 6-mark answers','Link biology to real examples you can remember'],
+    weeklyPlan:['Mon: Cell biology (organelles, division)','Tue: Organisation & the digestive system','Wed: Infection and response','Thu: Bioenergetics (photosynthesis/respiration)','Fri: Past paper questions','Sat: Ecosystems & inheritance','Sun: Flashcard review of the week'],
+    examTips:['Write structured answers: state → explain → example','6-mark Qs: plan 6 distinct points before writing','Always include units and spell keywords correctly','Read Qs carefully — many marks lost on misread Qs'],
+    resources:['BBC Bitesize Biology','Seneca Learning (free)','Freesciencelessons YouTube','AQA Biology past papers']
+  },
+  chemistry: {
+    emoji:'⚗️', color:'#e8c96a', tags:['Calculations','Equations','Required Practicals'],
+    overview:'Chemistry needs a balance of memorisation (equations) and understanding (mechanisms and calculations).',
+    keyTechniques:['Know all required practicals and what they test','Balance equations and understand moles calculations','Flashcards for all symbols, formulae, and reactivity series','Practise calculation chains (moles → mass → concentration)'],
+    weeklyPlan:['Mon: Atomic structure & periodic table','Tue: Bonding (ionic, covalent, metallic)','Wed: Required practicals review','Thu: Calculation practice (moles, concentration)','Fri: Organic chemistry + reactions','Sat: Past paper questions','Sun: Equation balancing drill'],
+    examTips:['Show every step in calculations — method marks available','Write half-equations clearly in electrolysis Qs','Draw dot-and-cross diagrams accurately','Quote evidence from data when analysing graphs'],
+    resources:['Freesciencelessons YouTube','CGP Chemistry guide','BBC Bitesize Chemistry','RSC resources online']
+  },
+  physics: {
+    emoji:'⚡', color:'#e87c82', tags:['Equations','Graphs','Required Practicals'],
+    overview:'Physics combines memory (equations) with application. Understanding the physics beats memorising it.',
+    keyTechniques:['Memorise all equations on the formula sheet + rearranging them','Practise graph drawing and interpretation (velocity-time, etc.)','Required practicals: know method, variables, and error analysis','Unit conversions — get these automatic before the exam'],
+    weeklyPlan:['Mon: Forces & motion (Newton\'s laws)','Tue: Electricity (circuits + calculations)','Wed: Waves & electromagnetic spectrum','Thu: Energy & power calculations','Fri: Past paper timed practice','Sat: Atomic physics & space','Sun: Equation rearrangement drill'],
+    examTips:['Always write the equation before substituting values','Quote precise values from graphs — don\'t estimate loosely','Double check significant figures in final answers','If you can\'t answer: estimate using known quantities'],
+    resources:['Freesciencelessons YouTube','Isaac Physics (free practice)','CGP Physics guide','AQA Physics past papers']
+  },
+  history: {
+    emoji:'📜', color:'#c8a84b', tags:['Source Analysis','Essays','Interpretations'],
+    overview:'History is about building and deploying evidence-based arguments — not just knowing facts.',
+    keyTechniques:['Construct a key event timeline for each topic studied','Learn 3 strong examples per cause/consequence question','Source analysis: always infer meaning, not just describe','Essay structure: argument → evidence → explain significance'],
+    weeklyPlan:['Mon: Revise key dates/events for one topic','Tue: Practice a 12-mark essay plan','Wed: Source interpretation skills (NOP framework)','Thu: Cause/consequence question drill','Fri: Past paper question timed','Sat: Review errors from mark scheme','Sun: Rewrite weak paragraphs'],
+    examTips:['Give a direct answer in your opening sentence','Back every point with a specific named example or date','NOP for sources: Nature, Origin, Purpose','Interpretations: contrast two views, explain the difference'],
+    resources:['BBC Bitesize History','Seneca Learning','Mr Allsop History YouTube','Your specification + past papers']
+  },
+  geography: {
+    emoji:'🌍', color:'#52b788', tags:['Case Studies','Data Response','6-Markers'],
+    overview:'Geography needs place-specific case studies applied to conceptual frameworks. Learn the examples, then the frameworks.',
+    keyTechniques:['Master 6–8 key case studies (name, date, facts, impacts)','Graphs and data: always quote precise figures in answers','6-mark Qs: structure as PEEL with geographical terminology','Learn command words: describe/explain/assess/evaluate'],
+    weeklyPlan:['Mon: Physical geography — tectonic hazards','Tue: Physical geography — coasts/rivers','Wed: Human geography — urban issues','Thu: Human geography — resource management','Fri: Case study flashcard recall drill','Sat: Past paper data response practice','Sun: Fieldwork + B section prep'],
+    examTips:['Refer to your case study by name every time','Include actual statistics — not vague claims','For evaluative Qs: balanced answer then conclude','Sketch maps add marks — label them clearly'],
+    resources:['BBC Bitesize Geography','Cool Geography website','Seneca Learning','AQA/Edexcel Geography past papers']
+  },
+  french: {
+    emoji:'🇫🇷', color:'#7c9bde', tags:['Speaking','Listening','Writing','Reading'],
+    overview:'French requires daily exposure. Little and often beats cramming. Immerse yourself even for 10 mins a day.',
+    keyTechniques:['Vocab drilling: 10 new words per day using Anki or Quizlet','Tense mastery: present, passé composé, future, conditional','Speaking prep: record yourself answering common photo card Qs','Writing: learn 10 high-value opinion phrases + connectives'],
+    weeklyPlan:['Mon: Vocabulary drill (10 new words)','Tue: Grammar focus — tense practice','Wed: Speaking prep (record a 2 min monologue)','Thu: Reading comprehension past paper','Fri: Listening practice (past paper audio)','Sat: Writing task (100 word + structured response)','Sun: Review all vocab from the week'],
+    examTips:['Sprinkle opinion phrases throughout — examiners reward them','Use complex sentences: subordinate + relative clauses','In writing: include a range of tenses deliberately','Listening: skim questions before audio starts'],
+    resources:['Duolingo (daily vocab)','Quizlet shared French decks','Language Angels','AQA French past papers + audio']
+  },
+  spanish: {
+    emoji:'🇪🇸', color:'#c1121f', tags:['Speaking','Listening','Writing','Reading'],
+    overview:'Spanish rewards daily exposure, tense mastery, and practised opinion phrases above all else.',
+    keyTechniques:['Vocab: 10 words per day using flashcard apps','Ser vs estar, por vs para — understand the rules not just examples','Practise all 4 skills equally throughout the week','Learn 5–6 complex opinion sentences for speaking topics'],
+    weeklyPlan:['Mon: Vocabulary drill','Tue: Grammar — irregular verbs','Wed: Speaking: photo card + conversation topics','Thu: Reading comprehension','Fri: Listening practice','Sat: Writing practice','Sun: Full vocab review'],
+    examTips:['Write in full sentences — never fragments','Use connectives: sin embargo, aunque, además, por eso','In speaking: keep talking — pause fillers are fine','Reading: identify cognates to decipher unknown words'],
+    resources:['Languagenut','Quizlet Spanish sets','BBC Bitesize Spanish','AQA/Edexcel Spanish past papers']
+  },
+  english: {
+    emoji:'📖', color:'#e87c82', tags:['Language','Literature','Creative Writing'],
+    overview:'English rewards analytical precision and confident written voice. Build your quote bank now and practise PEEL daily.',
+    keyTechniques:['Active reading: annotate as you go, noting techniques and effects','Build a quote bank of 5–8 quotes per text, memorised','PEEL paragraph structure: Point → Evidence → Explain → Link','Creative writing: draft 3 different openings and learn your best one'],
+    weeklyPlan:['Mon: Literature — analyse one key extract','Tue: Language — unseen text practice (Q4 style)','Wed: Creative writing practice (30 min timed)','Thu: Quote bank revision + technique labelling','Fri: Past paper question under timed conditions','Sat: Mark scheme review + improve one response','Sun: Read freely — fiction or non-fiction'],
+    examTips:['Lead with a conceptual point, not a plot summary','Always embed quotes — don\'t drop them in isolation','Language analysis: zoom in on a single word for effect','Plan before you write — even 2 minutes saves time'],
+    resources:['AQA English past papers','GCSE Pod (video lessons)','Seneca Learning','Mr Bruff YouTube channel']
+  },
+  rs: {
+    emoji:'🕊️', color:'#a78bfa', tags:['Quotes','Ethics','Beliefs & Teachings'],
+    overview:'RS is highly content-dependent but rewards structured arguments. Learn key quotes and both sides of every ethical debate.',
+    keyTechniques:['Flashcard key quotes from religious texts for each topic','For 12-mark questions: 3 arguments for, 3 against, clear conclusion','Learn 2 contrasting religious views per ethical issue','Use specialist vocabulary: omnipotent, sanctity of life, agape, etc.'],
+    weeklyPlan:['Mon: Christianity beliefs (God, Jesus, afterlife)','Tue: Islam beliefs (Allah, Muhammad, Five Pillars)','Wed: Ethical issues — crime & punishment','Thu: Ethical issues — peace & conflict','Fri: Past paper 12-mark question practice','Sat: Quote revision + mark scheme review','Sun: Philosophy of religion (evil, creation)'],
+    examTips:['State your argument clearly in the first sentence','12-mark Qs: balanced answer with conclusion — don\'t sit on the fence','Reference specific teachings: "Christians believe… because…"','Avoid vague language — use technical terms confidently'],
+    resources:['BBC Bitesize Religious Studies','Seneca Learning RS','CGP RS Revision Guide','AQA RS past papers']
+  },
+  art: {
+    emoji:'🎨', color:'#fb923c', tags:['Portfolio','Coursework','Exam Piece'],
+    overview:'Art GCSE is 60% coursework. Use your prep time to develop your portfolio and research skills — not just making final pieces.',
+    keyTechniques:['Artist research pages: analysis of technique, context, and influence','Document your process — annotate every development step','Practise your exam piece technique repeatedly before the real thing','Use a range of media: pencil, paint, mixed media, collage'],
+    weeklyPlan:['Mon: Artist research + annotation','Tue: Develop 1 page in sketchbook','Wed: Technique practice (focused skill drill)','Thu: Develop another sketchbook page','Fri: Review and annotate your week\'s work','Sat: Larger development piece','Sun: Rest or mood board / inspiration gathering'],
+    examTips:['Write analytical annotations — not just descriptions','Compare your work to your artist inspiration explicitly','Show clear development from early ideas to final piece','In the 10-hour exam: plan first, don\'t rush in'],
+    resources:['Your teacher\'s feedback — most important resource','Pinterest boards for inspiration','AQA Art & Design past exam papers','Tate Modern and V&A online resources']
+  }
+};
+
+const SUBJECT_DB_DEFAULT = {
+  emoji:'📖', color:'#7c9bde', tags:['Revision','Practice','Past Papers'],
+  overview:'A structured approach works for any subject: active recall, spaced repetition, and timed past paper practice.',
+  keyTechniques:['Create a topic list from your specification — work through it systematically','Active recall: flashcards, mind maps, teach-back method','Past papers under timed conditions — then review mark scheme','Target weak areas, not just topics you already know'],
+  weeklyPlan:['Mon: Core topic 1 — notes + flashcards','Tue: Core topic 2 — notes + flashcards','Wed: Practice Qs on week\'s topics','Thu: Past paper section (timed)','Fri: Mark scheme review + find gaps','Sat: Weak area targeted revision','Sun: Flashcard review of all week\'s content'],
+  examTips:['Read the question twice before writing','Plan longer answers before starting','Leave 5 mins at the end to check answers','Show your thinking — partial working earns marks'],
+  resources:['BBC Bitesize','Seneca Learning (free)','Your exam board\'s past papers','CGP Revision Guides']
+};
+
+function getSubjectData(name) {
+  const key = name.toLowerCase().replace(/[\s-]+/g,'').replace(/[^a-z]/g,'');
+  for (const [k, v] of Object.entries(SUBJECT_DB)) {
+    if (key.includes(k) || k.includes(key) || (k === 'rs' && (key.includes('religion') || key.includes('religious')))) {
+      return {...v, name};
+    }
+  }
+  return {...SUBJECT_DB_DEFAULT, name};
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+const CHIP_COLORS = ['#7c9bde','#52b788','#e8c96a','#e87c82','#c8a84b','#a78bfa','#fb923c','#34d399','#f472b6','#60a5fa'];
+
+function loadSubjects() { return store.get('subjects_v2', []); }
+function saveSubjects(s) { store.set('subjects_v2', s); }
+
+function addSubject() {
+  const input = document.getElementById('subject-input');
+  const name = input.value.trim();
+  if (!name) return;
+  const subjects = loadSubjects();
+  if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase())) { input.value=''; return; }
+  const id = name.toLowerCase().replace(/[\s]+/g,'-').replace(/[^a-z0-9-]/g,'') + '_' + Date.now();
+  const data = getSubjectData(name);
+  subjects.push({ id, name, color: data.color || CHIP_COLORS[subjects.length % CHIP_COLORS.length] });
+  saveSubjects(subjects);
+  input.value = '';
+  renderSubjects();
+  renderChecklist();
+  selectSubject(id);
+}
+
+function removeSubject(id, e) {
+  e.stopPropagation();
+  if (!confirm('Remove this subject and its checklist tasks?')) return;
+  const subjects = loadSubjects().filter(s => s.id !== id);
+  saveSubjects(subjects);
+  const custom = store.get('custom_tasks', {});
+  delete custom['subj_' + id];
+  store.set('custom_tasks', custom);
+  renderSubjects();
+  renderChecklist();
+}
+
+function selectSubject(id) {
+  document.querySelectorAll('.subject-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.subject-plan-container').forEach(p => p.classList.remove('active'));
+  const chip = document.querySelector(`.subject-chip[data-id="${id}"]`);
+  if (chip) chip.classList.add('active');
+  const plan = document.getElementById('splan-' + id);
+  if (plan) plan.classList.add('active');
+  document.getElementById('no-subject-msg').style.display = 'none';
+}
+
+function renderSubjects() {
+  const subjects = loadSubjects();
+  const chipsEl = document.getElementById('subject-chips');
+  const area = document.getElementById('subject-plans-area');
+
+  area.querySelectorAll('.subject-plan-container').forEach(el => el.remove());
+  chipsEl.innerHTML = '';
+
+  if (subjects.length === 0) {
+    document.getElementById('no-subject-msg').style.display = 'block';
+    return;
+  }
+  document.getElementById('no-subject-msg').style.display = 'none';
+
+  // Update modal group options with subjects
+  updateModalOptions(subjects);
+
+  subjects.forEach(s => {
+    const data = getSubjectData(s.name);
+
+    // Chip
+    const chip = document.createElement('div');
+    chip.className = 'subject-chip';
+    chip.dataset.id = s.id;
+    chip.innerHTML = `<span class="chip-dot" style="background:${s.color}"></span>${data.emoji} ${s.name}<button class="chip-remove" onclick="removeSubject('${s.id}',event)" title="Remove">×</button>`;
+    chip.addEventListener('click', () => selectSubject(s.id));
+    chipsEl.appendChild(chip);
+
+    // Plan panel
+    const plan = document.createElement('div');
+    plan.className = 'subject-plan-container';
+    plan.id = 'splan-' + s.id;
+
+    const weekRows = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day, i) => {
+      const content = data.weeklyPlan[i] || '';
+      const short = content.replace(/^[A-Z][a-z]+:\s*/,'');
+      const label = short.length > 20 ? short.substring(0,18)+'…' : short;
+      return `<div class="mini-day">
+        <div class="mini-day-name">${day}</div>
+        <div class="mini-day-content">
+          ${content
+            ? `<span class="mini-pill" style="background:rgba(${hexToRgb(s.color)},0.2);color:${s.color};border:1px solid rgba(${hexToRgb(s.color)},0.4)">${label}</span>`
+            : `<span class="mini-pill" style="background:rgba(107,122,153,0.2);color:var(--mid);border:1px solid rgba(107,122,153,0.3)">Rest</span>`}
+        </div>
+      </div>`;
+    }).join('');
+
+    plan.innerHTML = `
+      <div class="subject-plan-header">
+        <div class="subject-plan-name" style="color:${s.color}">${data.emoji} ${s.name}</div>
+        <div class="subject-plan-meta">${data.overview}</div>
+        <div class="subject-tags">${data.tags.map(t=>`<span class="subject-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="sessions-title">Suggested Weekly Schedule</div>
+      <div class="subject-week-mini">${weekRows}</div>
+      <div class="plan-sections">
+        <div class="plan-section">
+          <div class="plan-section-title">🎯 Key Revision Techniques</div>
+          <ul class="plan-list">${data.keyTechniques.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+        <div class="plan-section">
+          <div class="plan-section-title">✅ Exam Tips</div>
+          <ul class="plan-list">${data.examTips.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+        <div class="plan-section">
+          <div class="plan-section-title">📅 Day-by-Day Plan</div>
+          <ul class="plan-list">${data.weeklyPlan.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+        <div class="plan-section">
+          <div class="plan-section-title">📚 Recommended Resources</div>
+          <ul class="plan-list">${data.resources.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+      </div>
+    `;
+    area.appendChild(plan);
+  });
+
+  // Auto-select first if nothing is active
+  if (!document.querySelector('.subject-plan-container.active') && subjects.length > 0) {
+    selectSubject(subjects[0].id);
+  }
+}
+
+// ===== CHECKLIST =====
+const BASE_GROUPS = [
+  { id:'cricket', title:'🏏 Cricket', cls:'ct', tasks:['3 batting drill sessions completed','Fielding & agility session x2','Academy training attended','Visualisation done (5 mins x3)','Cricket journal entry written','Watched/reviewed 1 innings analytically'] },
+  { id:'english', title:'📚 English GCSE', cls:'st', tasks:['Daily reading (20 mins x5)','5 new vocabulary words learned','1 PEEL paragraph written','Past paper question practised','Quote bank updated with 3+ new quotes','Reviewed mark scheme for 1 answer'] },
+  { id:'mental', title:'🧠 Mental & Wellbeing', cls:'', color:'var(--gold)', tasks:['8+ hours sleep x5 nights','Pre-session routine used every time','Box breathing practised x3','Screens off 30 mins before bed x4'] },
+  { id:'physical', title:'⚡ Physical', cls:'', color:'var(--mid)', tasks:['Sprint / speed work session done','Agility drills x2 this week','Ate well around training days','Hydration — 2L water daily x5'] }
+];
+
+function getChecklistGroups() {
+  const subjects = loadSubjects();
+  const groups = [...BASE_GROUPS];
+  subjects.forEach(s => {
+    groups.push({
+      id: 'subj_' + s.id,
+      title: `📖 ${s.name}`,
+      cls: '', color: s.color,
+      tasks: [
+        `${s.name}: 30 min revision session done`,
+        `${s.name}: Flashcard/active recall practice`,
+        `${s.name}: Past paper question attempted`,
+        `${s.name}: Weak topic identified and revisited`
+      ]
+    });
+  });
+  return groups;
+}
+
+function renderChecklist() {
+  const grid = document.getElementById('checklist-grid');
+  const weekKey = getWeekKey();
+  const state = store.get('cl_state', {});
+  const weekState = state[weekKey] || {};
+  const customTasks = store.get('custom_tasks', {});
+  const groups = getChecklistGroups();
+
+  // Update week label
+  const now = new Date(), day = now.getDay();
+  const mon = new Date(now); mon.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+  document.getElementById('week-label').textContent = `Week of ${fmt(mon)} – ${fmt(sun)}`;
+  const allKeys = Object.keys(state).length;
+  document.getElementById('streak-label').textContent = `${allKeys} week${allKeys !== 1 ? 's' : ''} tracked · Aim for 80%+ to stay on track`;
+
+  grid.innerHTML = '';
+  let total = 0, done = 0;
+
+  groups.forEach(group => {
+    const custom = customTasks[group.id] || [];
+    const allTasks = [...group.tasks, ...custom];
+    const doneCount = allTasks.filter((_, i) => weekState[`${group.id}__${i}`]).length;
+    total += allTasks.length;
+    done += doneCount;
+
+    const g = document.createElement('div');
+    g.className = 'checklist-group';
+    const titleStyle = group.cls ? '' : `style="color:${group.color || 'var(--mid)'}"`;
+    g.innerHTML = `
+      <div class="checklist-group-header">
+        <div class="checklist-group-title ${group.cls}" ${titleStyle}>${group.title}</div>
+        <div class="group-count" id="gc-${group.id}">${doneCount}/${allTasks.length}</div>
+      </div>
+      <div id="gi-${group.id}"></div>
+      <div class="add-task-row">
+        <input class="add-task-input" placeholder="Add a task…" data-group="${group.id}" onkeydown="if(event.key==='Enter') inlineAdd(this)">
+        <button class="add-task-btn" onclick="inlineAdd(this.previousElementSibling)">+</button>
+      </div>`;
+
+    const itemsWrap = g.querySelector(`#gi-${group.id}`);
+    allTasks.forEach((task, i) => {
+      const key = `${group.id}__${i}`;
+      const isDone = !!weekState[key];
+      const isCustom = i >= group.tasks.length;
+      const item = document.createElement('label');
+      item.className = 'check-item' + (isDone ? ' done' : '');
+      item.innerHTML = `<div class="check-box">✓</div><span class="check-label">${task}</span>${isCustom ? `<button class="check-delete" title="Remove task">×</button>` : ''}`;
+      item.querySelector('.check-box').addEventListener('click', () => {
+        item.classList.toggle('done');
+        const st = store.get('cl_state', {});
+        const wk = getWeekKey();
+        if (!st[wk]) st[wk] = {};
+        st[wk][key] = item.classList.contains('done');
+        store.set('cl_state', st);
+        recountGroup(group.id, groups);
+        updateProgressBar();
+      });
+      if (isCustom) {
+        const delBtn = item.querySelector('.check-delete');
+        const customIdx = i - group.tasks.length;
+        delBtn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); deleteCustom(group.id, customIdx); });
+      }
+      itemsWrap.appendChild(item);
+    });
+
+    grid.appendChild(g);
+  });
+
+  updateProgressWith(done, total);
+}
+
+function recountGroup(groupId, groups) {
+  const group = groups.find(g => g.id === groupId);
+  if (!group) return;
+  const custom = store.get('custom_tasks', {})[groupId] || [];
+  const allLen = group.tasks.length + custom.length;
+  const doneCount = document.querySelectorAll(`#gi-${groupId} .check-item.done`).length;
+  const el = document.getElementById(`gc-${groupId}`);
+  if (el) el.textContent = `${doneCount}/${allLen}`;
+}
+
+function updateProgressBar() {
+  const all = document.querySelectorAll('#checklist-grid .check-item').length;
+  const done = document.querySelectorAll('#checklist-grid .check-item.done').length;
+  updateProgressWith(done, all);
+}
+
+function updateProgressWith(done, total) {
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function inlineAdd(input) {
+  const text = input.value.trim();
+  if (!text) return;
+  const groupId = input.dataset.group;
+  const custom = store.get('custom_tasks', {});
+  if (!custom[groupId]) custom[groupId] = [];
+  custom[groupId].push(text);
+  store.set('custom_tasks', custom);
+  input.value = '';
+  renderChecklist();
+}
+
+function deleteCustom(groupId, idx) {
+  const custom = store.get('custom_tasks', {});
+  if (custom[groupId]) { custom[groupId].splice(idx, 1); store.set('custom_tasks', custom); }
+  renderChecklist();
+}
+
+function openAddTaskModal() {
+  updateModalOptions(loadSubjects());
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-task-text').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('modal-task-text').value = '';
+}
+function confirmAddTask() {
+  const text = document.getElementById('modal-task-text').value.trim();
+  const group = document.getElementById('modal-task-group').value;
+  if (!text) return;
+  const custom = store.get('custom_tasks', {});
+  if (!custom[group]) custom[group] = [];
+  custom[group].push(text);
+  store.set('custom_tasks', custom);
+  closeModal();
+  renderChecklist();
+}
+function confirmReset() {
+  if (!confirm('Reset this week\'s checklist? Custom tasks and subjects will be kept.')) return;
+  const st = store.get('cl_state', {});
+  delete st[getWeekKey()];
+  store.set('cl_state', st);
+  renderChecklist();
+}
+
+function updateModalOptions(subjects) {
+  const sel = document.getElementById('modal-task-group');
+  const baseOptions = ['<option value="cricket">🏏 Cricket</option>','<option value="english">📚 English GCSE</option>','<option value="mental">🧠 Mental & Wellbeing</option>','<option value="physical">⚡ Physical</option>'];
+  const subjOptions = subjects.map(s => `<option value="subj_${s.id}">📖 ${s.name}</option>`);
+  sel.innerHTML = [...baseOptions, ...subjOptions].join('');
+}
+
+// ===== INIT =====
+(function init() {
+  // Pre-load English if no subjects yet
+  if (loadSubjects().length === 0) {
+    store.set('subjects_v2', [{ id:'english_default', name:'English', color:'#e87c82' }]);
+  }
+  renderSubjects();
+  renderChecklist();
+})();
+</script>
+</body>
+</html>
